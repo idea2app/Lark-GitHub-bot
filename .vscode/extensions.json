@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "yzhang.markdown-all-in-one",
+    "xyc.vscode-mdx-preview",
+    "redhat.vscode-yaml",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "github.copilot"
+  ]
+}

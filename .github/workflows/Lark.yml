@@ -1,0 +1,177 @@
+name: Lark notification
+on:
+  push:
+  issues:
+  issue_comment:
+  pull_request:
+
+jobs:
+  send-Lark-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Commits pushed
+        uses: foxundermoon/feishu-action@v2
+        if: github.event_name == 'push'
+        with:
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          msg_type: post
+          content: |
+            post:
+              zh_cn:
+                title: GitHub 代码提交
+                content:
+                  - - tag: text
+                      text: 提交链接：
+                    - tag: a
+                      text: ${{ github.event.head_commit.url }}
+                      href: ${{ github.event.head_commit.url }}
+                  - - tag: text
+                      text: 代码分支：
+                    - tag: a
+                      text: ${{ github.ref }}
+                      href: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
+                  - - tag: text
+                      text: 提交作者：
+                    - tag: a
+                      text: ${{ github.actor }}
+                      href: ${{ github.server_url }}/${{ github.actor }}
+                  - - tag: text
+                      text: 提交信息：
+                    - tag: text
+                      text: |
+                        ${{ github.event.head_commit.message }}
+
+      - name: Issue/PR opened
+        uses: foxundermoon/feishu-action@v2
+        if: (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened')
+        with:
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          msg_type: post
+          content: |
+            post:
+              zh_cn:
+                title: GitHub issue 打开：${{ github.event.issue.title }}
+                content:
+                  - - tag: text
+                      text: 链接：
+                    - tag: a
+                      text: ${{ github.event.issue.html_url }}
+                      href: ${{ github.event.issue.html_url }}
+                  - - tag: text
+                      text: 作者：
+                    - tag: a
+                      text: ${{ github.event.issue.user.login }}
+                      href: ${{ github.event.issue.user.html_url }}
+                  - - tag: text
+                      text: 指派：
+                    - tag: a
+                      text: ${{ github.event.issue.assignee.login }}
+                      href: ${{ github.event.issue.assignee.html_url }}
+                  - - tag: text
+                      text: "标签：${{ github.event.issue.labels }}"
+                  - - tag: text
+                      text: 里程碑：${{ github.event.issue.milestone.title }}
+                  - - tag: text
+                      text: 内容：
+                    - tag: text
+                      text: |
+                        ${{ github.event.issue.body }}
+
+      - name: Issue edited
+        uses: foxundermoon/feishu-action@v2
+        if: (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'edited' || github.event.action == 'transferred' || github.event.action == 'labeled' || github.event.action == 'unlabeled' || github.event.action == 'assigned' || github.event.action == 'unassigned')
+        with:
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          msg_type: post
+          content: |
+            post:
+              zh_cn:
+                title: GitHub issue 编辑：${{ github.event.issue.title }}
+                content:
+                  - - tag: text
+                      text: 链接：
+                    - tag: a
+                      text: ${{ github.event.issue.html_url }}
+                      href: ${{ github.event.issue.html_url }}
+                  - - tag: text
+                      text: 作者：
+                    - tag: a
+                      text: ${{ github.event.issue.user.login }}
+                      href: ${{ github.event.issue.user.html_url }}
+                  - - tag: text
+                      text: 指派：
+                    - tag: a
+                      text: ${{ github.event.issue.assignee.login }}
+                      href: ${{ github.event.issue.assignee.html_url }}
+                  - - tag: text
+                      text: "标签：${{ github.event.issue.labels }}"
+                  - - tag: text
+                      text: 里程碑：${{ github.event.issue.milestone.title }}
+                  - - tag: text
+                      text: 内容：
+                    - tag: text
+                      text: |
+                        ${{ github.event.issue.body }}
+
+      - name: Issue closed
+        uses: foxundermoon/feishu-action@v2
+        if: (github.event_name == 'issues' || github.event_name == 'pull_request') && github.event.action == 'closed'
+        with:
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          msg_type: post
+          content: |
+            post:
+              zh_cn:
+                title: GitHub issue 关闭：${{ github.event.issue.title }}
+                content:
+                  - - tag: text
+                      text: 链接：
+                    - tag: a
+                      text: ${{ github.event.issue.html_url }}
+                      href: ${{ github.event.issue.html_url }}
+                  - - tag: text
+                      text: 作者：
+                    - tag: a
+                      text: ${{ github.event.issue.user.login }}
+                      href: ${{ github.event.issue.user.html_url }}
+                  - - tag: text
+                      text: 指派：
+                    - tag: a
+                      text: ${{ github.event.issue.assignee.login }}
+                      href: ${{ github.event.issue.assignee.html_url }}
+                  - - tag: text
+                      text: "标签：${{ github.event.issue.labels }}"
+                  - - tag: text
+                      text: 里程碑：${{ github.event.issue.milestone.title }}
+                  - - tag: text
+                      text: 内容：
+                    - tag: text
+                      text: |
+                        ${{ github.event.issue.body }}
+
+      - name: Issue commented
+        uses: foxundermoon/feishu-action@v2
+        if: github.event_name == 'issue_comment' && (github.event.action == 'created' || github.event.action == 'edited')
+        with:
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          msg_type: post
+          content: |
+            post:
+              zh_cn:
+                title: GitHub issue 评论：${{ github.event.issue.title }}
+                content:
+                  - - tag: text
+                      text: 链接：
+                    - tag: a
+                      text: ${{ github.event.comment.html_url }}
+                      href: ${{ github.event.comment.html_url }}
+                  - - tag: text
+                      text: 作者：
+                    - tag: a
+                      text: ${{ github.event.comment.user.login }}
+                      href: ${{ github.event.comment.user.html_url }}
+                  - - tag: text
+                      text: 内容：
+                    - tag: text
+                      text: |
+                        ${{ github.event.comment.body }}
