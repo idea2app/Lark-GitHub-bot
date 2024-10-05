@@ -38,7 +38,8 @@ jobs:
                   - - tag: text
                       text: 提交信息：
                     - tag: text
-                      text: ${{ github.event.head_commit.message }}
+                      text: |
+                        ${{ github.event.head_commit.message }}
 
       - name: Issue/PR opened
         uses: foxundermoon/feishu-action@v2
@@ -67,13 +68,14 @@ jobs:
                       text: ${{ github.event.issue.assignee.login }}
                       href: ${{ github.event.issue.assignee.html_url }}
                   - - tag: text
-                      text: 标签：${{ github.event.issue.labels }}
+                      text: "标签：${{ github.event.issue.labels }}"
                   - - tag: text
                       text: 里程碑：${{ github.event.issue.milestone.title }}
                   - - tag: text
                       text: 内容：
                     - tag: text
-                      text: ${{ github.event.issue.body }}
+                      text: |
+                        ${{ github.event.issue.body }}
 
       - name: Issue edited
         uses: foxundermoon/feishu-action@v2
@@ -102,13 +104,14 @@ jobs:
                       text: ${{ github.event.issue.assignee.login }}
                       href: ${{ github.event.issue.assignee.html_url }}
                   - - tag: text
-                      text: 标签：${{ github.event.issue.labels }}
+                      text: "标签：${{ github.event.issue.labels }}"
                   - - tag: text
                       text: 里程碑：${{ github.event.issue.milestone.title }}
                   - - tag: text
                       text: 内容：
                     - tag: text
-                      text: ${{ github.event.issue.body }}
+                      text: |
+                        ${{ github.event.issue.body }}
 
       - name: Issue closed
         uses: foxundermoon/feishu-action@v2
@@ -137,13 +140,14 @@ jobs:
                       text: ${{ github.event.issue.assignee.login }}
                       href: ${{ github.event.issue.assignee.html_url }}
                   - - tag: text
-                      text: 标签：${{ github.event.issue.labels }}
+                      text: "标签：${{ github.event.issue.labels }}"
                   - - tag: text
                       text: 里程碑：${{ github.event.issue.milestone.title }}
                   - - tag: text
                       text: 内容：
                     - tag: text
-                      text: ${{ github.event.issue.body }}
+                      text: |
+                        ${{ github.event.issue.body }}
 
       - name: Issue commented
         uses: foxundermoon/feishu-action@v2
@@ -169,4 +173,5 @@ jobs:
                   - - tag: text
                       text: 内容：
                     - tag: text
-                      text: ${{ github.event.comment.body }}
+                      text: |
+                        ${{ github.event.comment.body }}
