@@ -17,11 +17,11 @@ jobs:
         id: commit_message
         run: |
           echo "${{ github.event.head_commit.message }}" | sed 's/"/\\"/g' > commit_message.txt
-          body=$(cat commit_message.txt)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "commit_message=$body" >> $GITHUB_OUTPUT
+          {
+            echo 'commit_message<<EOF'
+            cat commit_message.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Commits pushed
         uses: foxundermoon/feishu-action@v2
@@ -58,11 +58,11 @@ jobs:
         id: issue_body
         run: |
           echo "${{ github.event.issue.body }}" | sed 's/"/\\"/g' > issue_body.txt
-          body=$(cat issue_body.txt)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "issue_body=$body" >> $GITHUB_OUTPUT
+          {
+            echo 'issue_body<<EOF'
+            cat issue_body.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Issue opened
         uses: foxundermoon/feishu-action@v2
@@ -173,11 +173,11 @@ jobs:
         id: PR_body
         run: |
           echo "${{ github.event.pull_request.body }}" | sed 's/"/\\"/g' > PR_body.txt
-          body=$(cat PR_body.txt)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "PR_body=$body" >> $GITHUB_OUTPUT
+          {
+            echo 'PR_body<<EOF'
+            cat PR_body.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: PR opened
         uses: foxundermoon/feishu-action@v2
@@ -288,11 +288,11 @@ jobs:
         id: discussion_body
         run: |
           echo "${{ github.event.discussion.body }}" | sed 's/"/\\"/g' > discussion_body.txt
-          body=$(cat discussion_body.txt)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "discussion_body=$body" >> $GITHUB_OUTPUT
+          {
+            echo 'discussion_body<<EOF'
+            cat discussion_body.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Discussion created
         uses: foxundermoon/feishu-action@v2
@@ -358,11 +358,11 @@ jobs:
         id: comment_body
         run: |
           echo "${{ github.event.comment.body }}" | sed 's/"/\\"/g' > comment_body.txt
-          body=$(cat comment_body.txt)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "comment_body=$body" >> $GITHUB_OUTPUT
+          {
+            echo 'comment_body<<EOF'
+            cat comment_body.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Issue/Discussion commented
         uses: foxundermoon/feishu-action@v2
