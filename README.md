@@ -4,6 +4,9 @@
 
 [![Lark notification](https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark.yml/badge.svg)][5]
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)][6]
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][7]
+
 ## Supported events
 
 1. Push
@@ -36,7 +39,7 @@ First, set the Web hook URL of your Lark custom bot to `LARK_CHATBOT_HOOK_URL` s
 
 ### New repository
 
-Click the [<kbd>Use this template</kbd>][6] button on the top of this GitHub repository's home page to create your own repository.
+Click the [<kbd>Use this template</kbd>][8] button on the top of this GitHub repository's home page to create your own repository.
 
 ### Old repository
 
@@ -58,4 +61,6 @@ pnpx get-git-folder https://github.com/idea2app/Lark-GitHub-bot main .github/wor
 [3]: https://github.com/features/actions
 [4]: https://app.larksuite.com/app/cli_9c4b6daaa4bad106
 [5]: https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark.yml
-[6]: https://github.com/new?template_name=Lark-GitHub-bot&template_owner=idea2app
+[6]: https://codespaces.new/idea2app/Lark-GitHub-bot
+[7]: https://gitpod.io/?autostart=true#https://github.com/idea2app/Lark-GitHub-bot
+[8]: https://github.com/new?template_name=Lark-GitHub-bot&template_owner=idea2app
