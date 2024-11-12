@@ -56,11 +56,18 @@ jobs:
                     - tag: text
                       text: "${{ steps.commit_message.outputs.commit_message }}"
 
-      - name: Issue body cleaning
-        id: issue_body
+      - name: Issue content cleaning
+        id: issue_content
         env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
+          echo "$ISSUE_TITLE" | sed 's/"/\\"/g' > issue_title.txt
+          {
+            echo 'issue_title<<EOF'
+            cat issue_title.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
           echo "$ISSUE_BODY" | sed 's/"/\\"/g' > issue_body.txt
           {
             echo 'issue_body<<EOF'
@@ -77,7 +84,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub issue 打开：${{ github.event.issue.title }}
+                title: "GitHub issue 打开：${{ steps.issue_content.outputs.issue_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -101,7 +108,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.issue_body.outputs.issue_body }}"
+                      text: "${{ steps.issue_content.outputs.issue_body }}"
 
       - name: Issue edited
         uses: foxundermoon/feishu-action@v2
@@ -112,7 +119,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub issue 编辑：${{ github.event.issue.title }}
+                title: "GitHub issue 编辑：${{ steps.issue_content.outputs.issue_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -136,7 +143,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.issue_body.outputs.issue_body }}"
+                      text: "${{ steps.issue_content.outputs.issue_body }}"
 
       - name: Issue closed
         uses: foxundermoon/feishu-action@v2
@@ -147,7 +154,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub issue 关闭：${{ github.event.issue.title }}
+                title: "GitHub issue 关闭：${{ steps.issue_content.outputs.issue_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -171,13 +178,20 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.issue_body.outputs.issue_body }}"
+                      text: "${{ steps.issue_content.outputs.issue_body }}"
 
-      - name: PR body cleaning
-        id: PR_body
+      - name: PR content cleaning
+        id: PR_content
         env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
+          echo "$PR_TITLE" | sed 's/"/\\"/g' > PR_title.txt
+          {
+            echo 'PR_title<<EOF'
+            cat PR_title.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
           echo "$PR_BODY" | sed 's/"/\\"/g' > PR_body.txt
           {
             echo 'PR_body<<EOF'
@@ -194,7 +208,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub PR 打开：${{ github.event.pull_request.title }}
+                title: "GitHub PR 打开：${{ steps.PR_content.outputs.PR_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -218,7 +232,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.PR_body.outputs.PR_body }}"
+                      text: "${{ steps.PR_content.outputs.PR_body }}"
 
       - name: PR edited
         uses: foxundermoon/feishu-action@v2
@@ -229,7 +243,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub PR 编辑：${{ github.event.pull_request.title }}
+                title: "GitHub PR 编辑：${{ steps.PR_content.outputs.PR_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -253,7 +267,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.PR_body.outputs.PR_body }}"
+                      text: "${{ steps.PR_content.outputs.PR_body }}"
 
       - name: PR closed
         uses: foxundermoon/feishu-action@v2
@@ -264,7 +278,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub PR 关闭：${{ github.event.pull_request.title }}
+                title: "GitHub PR 关闭：${{ steps.PR_content.outputs.PR_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -288,13 +302,20 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.PR_body.outputs.PR_body }}"
+                      text: "${{ steps.PR_content.outputs.PR_body }}"
 
-      - name: Discussion body cleaning
-        id: discussion_body
+      - name: Discussion content cleaning
+        id: discussion_content
         env:
+          DISCUSSION_TITLE: ${{ github.event.discussion.title }}
           DISCUSSION_BODY: ${{ github.event.discussion.body }}
         run: |
+          echo "$DISCUSSION_TITLE" | sed 's/"/\\"/g' > discussion_title.txt
+          {
+            echo 'discussion_title<<EOF'
+            cat discussion_title.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
           echo "$DISCUSSION_BODY" | sed 's/"/\\"/g' > discussion_body.txt
           {
             echo 'discussion_body<<EOF'
@@ -311,7 +332,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub 帖子发布：${{ github.event.discussion.title }}
+                title: "GitHub 帖子发布：${{ steps.discussion_content.outputs.discussion_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -330,7 +351,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.discussion_body.outputs.discussion_body }}"
+                      text: "${{ steps.discussion_content.outputs.discussion_body }}"
 
       - name: Discussion edited
         uses: foxundermoon/feishu-action@v2
@@ -341,7 +362,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub 帖子修改：${{ github.event.discussion.title }}
+                title: "GitHub 帖子修改：${{ steps.discussion_content.outputs.discussion_title }}"
                 content:
                   - - tag: text
                       text: 链接：
@@ -360,7 +381,7 @@ jobs:
                   - - tag: text
                       text: 描述：
                     - tag: text
-                      text: "${{ steps.discussion_body.outputs.discussion_body }}"
+                      text: "${{ steps.discussion_content.outputs.discussion_body }}"
 
       - name: Comment body cleaning
         id: comment_body
@@ -383,7 +404,7 @@ jobs:
           content: |
             post:
               zh_cn:
-                title: GitHub 帖子评论：${{ github.event.issue.title }}
+                title: "GitHub 帖子评论：${{ steps.issue_content.outputs.issue_title }}"
                 content:
                   - - tag: text
                       text: 链接：
