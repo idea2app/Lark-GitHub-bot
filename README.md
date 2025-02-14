@@ -32,6 +32,8 @@
 4. Issue comment
    1. created
    2. edited
+5. Release
+   1. published
 
 ## Usage
 
@@ -48,8 +50,15 @@ NPM compatible environment for example:
 ```shell
 npm i pnpm -g
 cd /path/to/your/git/repository/root
-cd .github/workflows
-pnpx get-git-folder https://github.com/idea2app/Lark-GitHub-bot main .github/workflows
+
+folders=".github/workflows .github/scripts"
+
+for folder in $folders; do
+   mkdir -p $folder
+   cd $folder
+   pnpx get-git-folder https://github.com/idea2app/Lark-GitHub-bot main $folder
+   cd -
+done
 ```
 
 ## Acknowledgement
