@@ -4,10 +4,8 @@ import { stdin } from "npm:zx";
 type GitHubSchema = components["schemas"];
 
 interface GitHubEvent
-  extends Record<
-    "event_name" | "action" | "actor" | "server_url" | "repository",
-    string
-  > {
+  extends Record<"event_name" | "actor" | "server_url" | "repository", string> {
+  action?: string;
   ref?: string;
   ref_name?: string;
   head_commit?: GitHubSchema["git-commit"];
@@ -35,7 +33,7 @@ const {
 } = JSON.parse((await stdin()) || "{}") as GitHubEvent;
 
 const actionText =
-  action === "closed" ? "关闭" : action.includes("open") ? "打开" : "编辑";
+  action === "closed" ? "关闭" : action?.includes("open") ? "打开" : "编辑";
 
 const zh_cn =
   event_name === "push"
@@ -226,4 +224,4 @@ const zh_cn =
     : null;
 
 if (zh_cn) console.log(JSON.stringify({ post: { zh_cn } }));
-else throw new Error(`Unsupported event: ${event_name}`);
+else console.error(`Unsupported event: ${event_name}`);

@@ -33,6 +33,7 @@ jobs:
           } >> $GITHUB_OUTPUT
 
       - name: Send message to Lark
+        if: ${{ contains(steps.message.outputs.content, ':') }}
         uses: foxundermoon/feishu-action@v2
         with:
           url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
