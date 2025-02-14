@@ -3,17 +3,19 @@ import { stdin } from "npm:zx";
 
 type GitHubSchema = components["schemas"];
 
-interface GitHubEvent
+interface GitHubAction
   extends Record<"event_name" | "actor" | "server_url" | "repository", string> {
   action?: string;
   ref?: string;
   ref_name?: string;
-  head_commit?: GitHubSchema["git-commit"];
-  issue?: GitHubSchema["webhook-issues-opened"]["issue"];
-  pull_request?: GitHubSchema["pull-request"];
-  discussion?: GitHubSchema["discussion"];
-  comment?: GitHubSchema["issue-comment"];
-  release?: GitHubSchema["release"];
+  event: {
+    head_commit?: GitHubSchema["git-commit"];
+    issue?: GitHubSchema["webhook-issues-opened"]["issue"];
+    pull_request?: GitHubSchema["pull-request"];
+    discussion?: GitHubSchema["discussion"];
+    comment?: GitHubSchema["issue-comment"];
+    release?: GitHubSchema["release"];
+  };
 }
 
 const {
@@ -24,14 +26,11 @@ const {
   repository,
   ref,
   ref_name,
-  head_commit,
-  issue,
-  pull_request,
-  discussion,
-  comment,
-  release,
-} = JSON.parse((await stdin()) || "{}") as GitHubEvent;
+  event,
+} = JSON.parse((await stdin()) || "{}") as GitHubAction;
 
+const { head_commit, issue, pull_request, discussion, comment, release } =
+  event;
 const actionText =
   action === "closed" ? "关闭" : action?.includes("open") ? "打开" : "编辑";
 
@@ -224,4 +223,4 @@ const zh_cn =
     : null;
 
 if (zh_cn) console.log(JSON.stringify({ post: { zh_cn } }));
-else console.error(`Unsupported event: ${event_name}`);
+else console.error(`Unsupported ${event_name} event & ${action} action`);
