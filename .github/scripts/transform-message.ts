@@ -84,12 +84,12 @@ const zh_cn =
           [
             {
               tag: "text",
-              text: `标签：${issue?.labels
-                ?.map(({ name }) => name)
-                .join(", ")}`,
+              text: `标签：${
+                issue?.labels?.map(({ name }) => name).join(", ") || ""
+              }`,
             },
           ],
-          [{ tag: "text", text: `里程碑：${issue?.milestone?.title}` }],
+          [{ tag: "text", text: `里程碑：${issue?.milestone?.title || ""}` }],
           [
             { tag: "text", text: "描述：" },
             { tag: "text", text: issue?.body },
@@ -127,12 +127,17 @@ const zh_cn =
           [
             {
               tag: "text",
-              text: `标签：${pull_request?.labels
-                .map(({ name }) => name)
-                .join(", ")}`,
+              text: `标签：${
+                pull_request?.labels.map(({ name }) => name).join(", ") || ""
+              }`,
             },
           ],
-          [{ tag: "text", text: `里程碑：${pull_request?.milestone?.title}` }],
+          [
+            {
+              tag: "text",
+              text: `里程碑：${pull_request?.milestone?.title || ""}`,
+            },
+          ],
           [
             { tag: "text", text: "描述：" },
             { tag: "text", text: pull_request?.body },
@@ -161,13 +166,13 @@ const zh_cn =
               href: discussion?.user?.html_url,
             },
           ],
-          [{ tag: "text", text: `分类：${discussion?.category.name}` }],
+          [{ tag: "text", text: `分类：${discussion?.category.name || ""}` }],
           [
             {
               tag: "text",
-              text: `标签：${discussion?.labels
-                ?.map(({ name }) => name)
-                .join(", ")}`,
+              text: `标签：${
+                discussion?.labels?.map(({ name }) => name).join(", ") || ""
+              }`,
             },
           ],
           [

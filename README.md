@@ -37,7 +37,8 @@
 
 ## Usage
 
-First, set the Web hook URL of your Lark custom bot to `LARK_CHATBOT_HOOK_URL` secret variable in your GitHub repository settings, then:
+First, create set up a repository as described below,
+then set the Web hook URL of your Lark custom bot to `LARK_CHATBOT_HOOK_URL` secret variable in your GitHub repository settings.
 
 ### New repository
 
