@@ -77,7 +77,7 @@ const eventHandlers: Record<string, EventHandler> = {
       [createText("链接："), createLink(issue!.html_url)],
       [
         createText("作者："),
-        createLink(issue?.user?.html_url, issue?.user?.login),
+        createLink(issue!.user!.html_url, issue!.user!.login),
       ],
       [
         createText("指派："),
@@ -100,7 +100,7 @@ const eventHandlers: Record<string, EventHandler> = {
       [createText("链接："), createLink(pull_request!.html_url)],
       [
         createText("作者："),
-        createLink(pull_request?.user.html_url, pull_request?.user.login),
+        createLink(pull_request!.user.html_url, pull_request!.user.login),
       ],
       [
         createText("指派："),
@@ -130,8 +130,7 @@ const eventHandlers: Record<string, EventHandler> = {
     content: [
       createContentItem("链接：", discussion?.html_url),
       createContentItem(
-        "作者：",
-        discussion?.user ? createUserLink(discussion.user) : createText("无")
+        "作者：", createUserLink(discussion.user)
       ),
       createContentItem("描述：", discussion?.body || "无"),
     ],
@@ -142,8 +141,7 @@ const eventHandlers: Record<string, EventHandler> = {
     content: [
       createContentItem("链接：", comment?.html_url),
       createContentItem(
-        "作者：",
-        comment?.user ? createUserLink(comment.user) : createText("无")
+        "作者：",createUserLink(comment.user) 
       ),
       createContentItem("描述：", comment?.body || "无"),
     ],
@@ -155,7 +153,7 @@ const eventHandlers: Record<string, EventHandler> = {
       createContentItem("链接：", comment?.html_url),
       createContentItem(
         "作者：",
-        comment?.user ? createUserLink(comment.user) : createText("无")
+        createUserLink(comment.user) 
       ),
       createContentItem("描述：", comment?.body || "无"),
     ],
@@ -166,8 +164,7 @@ const eventHandlers: Record<string, EventHandler> = {
     content: [
       createContentItem("链接：", release!.html_url),
       createContentItem(
-        "作者：",
-        release!.author && createUserLink(release.author)
+        "作者：", createUserLink(release.author)
       ),
       createContentItem("描述：", release!.body),
     ],
