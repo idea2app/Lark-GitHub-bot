@@ -121,19 +121,19 @@ const eventHandlers: Record<string, EventHandler> = {
         createText("里程碑："),
         createText(pull_request?.milestone?.title || "无"),
       ],
-      [createText("描述："), createText(pull_request?.body || "无描述")],
+      [createText("描述："), createText(pull_request?.body || "无")],
     ],
   }),
 
   discussion: ({ event: { discussion } }, actionText) => ({
-    title: `GitHub 讨论 ${actionText}：${discussion?.title || "未知讨论"}`,
+    title: `GitHub 讨论 ${actionText}：${discussion?.title || "无"}`,
     content: [
       createContentItem("链接：", discussion?.html_url),
       createContentItem(
         "作者：",
         discussion?.user ? createUserLink(discussion.user) : createText("无")
       ),
-      createContentItem("描述：", discussion?.body || "无描述"),
+      createContentItem("描述：", discussion?.body || "无"),
     ],
   }),
 
@@ -145,19 +145,19 @@ const eventHandlers: Record<string, EventHandler> = {
         "作者：",
         comment?.user ? createUserLink(comment.user) : createText("无")
       ),
-      createContentItem("描述：", comment?.body || "无描述"),
+      createContentItem("描述：", comment?.body || "无"),
     ],
   }),
 
   discussion_comment: ({ event: { comment, discussion } }, actionText) => ({
-    title: `GitHub 讨论评论：${discussion?.title || "未知讨论"}`,
+    title: `GitHub 讨论评论：${discussion?.title || "无"}`,
     content: [
       createContentItem("链接：", comment?.html_url),
       createContentItem(
         "作者：",
         comment?.user ? createUserLink(comment.user) : createText("无")
       ),
-      createContentItem("描述：", comment?.body || "无描述"),
+      createContentItem("描述：", comment?.body || "无"),
     ],
   }),
 
