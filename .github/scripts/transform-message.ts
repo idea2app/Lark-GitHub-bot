@@ -26,7 +26,7 @@ const createLink = (href: string, text = href) => ({ tag: "a", href, text });
 
 const createText = (text: string) => ({ tag: "text", text });
 
-// 新增辅助函数
+// create user link
 const createUserLink = (user?: { login: string; html_url: string }) =>
   user ? createLink(user.html_url, user.login) : createText("无");
 
@@ -125,16 +125,38 @@ const eventHandlers: Record<string, EventHandler> = {
     ],
   }),
 
-  comment: ({ event: { comment, issue, discussion } }, actionText) => ({
-    title: `GitHub 帖子评论：${
-      issue?.title || discussion?.title || "未知帖子"
-    }`,
+  discussion: ({ event: { discussion } }, actionText) => ({
+    title: `GitHub 讨论 ${actionText}：${discussion?.title || "未知讨论"}`,
+    content: [
+      createContentItem("链接：", discussion?.html_url),
+      createContentItem(
+        "作者：",
+        discussion?.user ? createUserLink(discussion.user) : createText("无")
+      ),
+      createContentItem("描述：", discussion?.body || "无描述"),
+    ],
+  }),
+
+  issue_comment: ({ event: { comment, issue } }, actionText) => ({
+    title: `GitHub issue 评论：${issue?.title || "未知 issue"}`,
     content: [
       createContentItem("链接：", comment?.html_url),
       createContentItem(
         "作者：",
         comment?.user ? createUserLink(comment.user) : createText("无")
-      ) as [any, any],
+      ),
+      createContentItem("描述：", comment?.body || "无描述"),
+    ],
+  }),
+
+  discussion_comment: ({ event: { comment, discussion } }, actionText) => ({
+    title: `GitHub 讨论评论：${discussion?.title || "未知讨论"}`,
+    content: [
+      createContentItem("链接：", comment?.html_url),
+      createContentItem(
+        "作者：",
+        comment?.user ? createUserLink(comment.user) : createText("无")
+      ),
       createContentItem("描述：", comment?.body || "无描述"),
     ],
   }),
