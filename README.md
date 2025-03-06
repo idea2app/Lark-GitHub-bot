@@ -2,7 +2,7 @@
 
 [Lark][1]/[FeiShu][2] notification bot based on [GitHub actions][3], which is an Open-source alternative of the official [GitHub assistant][4] (disabled for new users in FeiShu).
 
-[![Lark notification](https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark.yml/badge.svg)][5]
+[![Lark notification](https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark-notification.yml/badge.svg)][5]
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)][6]
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][7]
@@ -70,7 +70,7 @@ done
 [2]: https://www.feishu.cn/
 [3]: https://github.com/features/actions
 [4]: https://app.larksuite.com/app/cli_9c4b6daaa4bad106
-[5]: https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark.yml
+[5]: https://github.com/idea2app/Lark-GitHub-bot/actions/workflows/Lark-notification.yml
 [6]: https://codespaces.new/idea2app/Lark-GitHub-bot
 [7]: https://gitpod.io/?autostart=true#https://github.com/idea2app/Lark-GitHub-bot
 [8]: https://github.com/new?template_name=Lark-GitHub-bot&template_owner=idea2app

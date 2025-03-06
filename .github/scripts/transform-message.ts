@@ -3,6 +3,8 @@ import { stdin } from "npm:zx";
 
 type GitHubSchema = components["schemas"];
 
+type GitHubUser = GitHubSchema["simple-user"];
+
 interface GitHubAction
   extends Record<"event_name" | "actor" | "server_url" | "repository", string> {
   action?: string;
@@ -27,7 +29,7 @@ const createLink = (href: string, text = href) => ({ tag: "a", href, text });
 const createText = (text: string) => ({ tag: "text", text });
 
 // create user link
-const createUserLink = (user?: { login: string; html_url: string }) =>
+const createUserLink = (user: GitHubUser) =>
   user ? createLink(user.html_url, user.login) : createText("无");
 
 const createContentItem = (
@@ -77,12 +79,12 @@ const eventHandlers: Record<string, EventHandler> = {
       [createText("链接："), createLink(issue!.html_url)],
       [
         createText("作者："),
-        createLink(issue!.user!.html_url, issue!.user!.login),
+        createLink(issue!.user!.html_url!, issue!.user!.login),
       ],
       [
         createText("指派："),
         issue?.assignee
-          ? createLink(issue.assignee.html_url, issue.assignee.login)
+          ? createLink(issue.assignee.html_url!, issue.assignee.login)
           : createText("无"),
       ],
       [
@@ -130,31 +132,27 @@ const eventHandlers: Record<string, EventHandler> = {
     content: [
       createContentItem("链接：", discussion?.html_url),
       createContentItem(
-        "作者：", createUserLink(discussion.user)
+        "作者：",
+        createUserLink(discussion!.user as GitHubUser)
       ),
       createContentItem("描述：", discussion?.body || "无"),
     ],
   }),
 
-  issue_comment: ({ event: { comment, issue } }, actionText) => ({
+  issue_comment: ({ event: { comment, issue } }) => ({
     title: `GitHub issue 评论：${issue?.title || "未知 issue"}`,
     content: [
       createContentItem("链接：", comment?.html_url),
-      createContentItem(
-        "作者：",createUserLink(comment.user) 
-      ),
+      createContentItem("作者：", createUserLink(comment!.user!)),
       createContentItem("描述：", comment?.body || "无"),
     ],
   }),
 
-  discussion_comment: ({ event: { comment, discussion } }, actionText) => ({
+  discussion_comment: ({ event: { comment, discussion } }) => ({
     title: `GitHub 讨论评论：${discussion?.title || "无"}`,
     content: [
       createContentItem("链接：", comment?.html_url),
-      createContentItem(
-        "作者：",
-        createUserLink(comment.user) 
-      ),
+      createContentItem("作者：", createUserLink(comment!.user!)),
       createContentItem("描述：", comment?.body || "无"),
     ],
   }),
@@ -163,10 +161,8 @@ const eventHandlers: Record<string, EventHandler> = {
     title: `GitHub Release 发布：${release!.name || release!.tag_name}`,
     content: [
       createContentItem("链接：", release!.html_url),
-      createContentItem(
-        "作者：", createUserLink(release.author)
-      ),
-      createContentItem("描述：", release!.body),
+      createContentItem("作者：", createUserLink(release!.author)),
+      createContentItem("描述：", release!.body!),
     ],
   }),
 };
@@ -177,16 +173,15 @@ const processEvent = (event: GitHubAction) => {
   const actionText = getActionText(action);
   const handler = eventHandlers[event_name];
 
-  if (!handler) {
-    throw new Error(`No handler found for event: ${event_name}`);
-  }
+  if (!handler) throw new Error(`No handler found for event: ${event_name}`);
 
   try {
     return handler(event, actionText);
   } catch (cause) {
-    throw new Error(`Error processing ${event_name} event: ${cause.message}`, {
-      cause,
-    });
+    throw new Error(
+      `Error processing ${event_name} event: ${(cause as Error).message}`,
+      { cause }
+    );
   }
 };
 
@@ -194,10 +189,8 @@ const processEvent = (event: GitHubAction) => {
 const event = JSON.parse((await stdin()) || "{}") as GitHubAction;
 const zh_cn = processEvent(event);
 
-if (zh_cn) {
-  console.log(JSON.stringify({ post: { zh_cn } }));
-} else {
+if (zh_cn) console.log(JSON.stringify({ post: { zh_cn } }));
+else
   throw new Error(
     `Unsupported ${event.event_name} event & ${event.action} action`
   );
-}
