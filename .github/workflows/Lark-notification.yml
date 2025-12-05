@@ -8,6 +8,7 @@ on:
   discussion:
   issue_comment:
   discussion_comment:
+  pull_request_review_comment:
   release:
     types:
       - published
@@ -16,7 +17,7 @@ jobs:
   send-Lark-message:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: denoland/setup-deno@v2
         with:
@@ -25,7 +26,7 @@ jobs:
       - name: Event Message serialization
         id: message
         run: |
-          YAML=$(echo '${{ toJSON(github) }}' | deno --allow-all .github/scripts/transform-message.ts)
+          YAML=$(echo '${{ toJSON(github) }}' | deno --allow-all .github/scripts/transform-message-for-card.ts)
           {
             echo 'content<<EOF'
             echo $YAML
@@ -34,9 +35,9 @@ jobs:
 
       - name: Send message to Lark
         if: ${{ contains(steps.message.outputs.content, ':') }}
-        uses: foxundermoon/feishu-action@v2
+        uses: Open-Source-Bazaar/feishu-action@a2f4d3863274522f9e200c920be5ecec73d947e9
         with:
           url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
-          msg_type: post
+          msg_type: interactive
           content: |
             ${{ steps.message.outputs.content }}
