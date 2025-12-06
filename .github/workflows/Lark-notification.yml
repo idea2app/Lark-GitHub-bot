@@ -16,8 +16,10 @@ on:
 jobs:
   send-Lark-message:
     runs-on: ubuntu-latest
+    env:
+      FEISHU_BOT_WEBHOOK_URL: ${{ secrets.FEISHU_BOT_WEBHOOK_URL }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: denoland/setup-deno@v2
         with:
@@ -26,18 +28,22 @@ jobs:
       - name: Event Message serialization
         id: message
         run: |
-          YAML=$(echo '${{ toJSON(github) }}' | deno --allow-all .github/scripts/transform-message-for-card.ts)
+          YAML=$(
+            cat <<'JSON' | deno run --allow-all .github/scripts/transform-message-for-card.ts
+          ${{ toJSON(github) }}
+          JSON
+          )
           {
             echo 'content<<EOF'
-            echo $YAML
+            echo "$YAML"
             echo 'EOF'
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
 
       - name: Send message to Lark
         if: ${{ contains(steps.message.outputs.content, ':') }}
-        uses: Open-Source-Bazaar/feishu-action@a2f4d3863274522f9e200c920be5ecec73d947e9
+        uses: Open-Source-Bazaar/feishu-action@v1
         with:
-          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
+          url: ${{ env.FEISHU_BOT_WEBHOOK_URL }}
           msg_type: interactive
           content: |
             ${{ steps.message.outputs.content }}

@@ -61,9 +61,9 @@ const createUserLink = (user: GitHubUser) =>
 const sanitizeMarkdown = (text: string): string => {
   return text
     // 移除代码块
-    // .replace(/```[\s\S]*?```/g, '[代码块]')
+    .replace(/```[\s\S]*?```/g, '[代码块]')
     // 移除行内代码
-    // .replace(/`[^`]+`/g, (match) => match.slice(1, -1))
+    .replace(/`[^`]+`/g, (match) => match.slice(1, -1))
     // 将图片转换为链接文本
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '🖼️ [$1]($2)')
     // 将 ### 标题转换为加粗
@@ -104,7 +104,6 @@ const eventHandlers: Record<string, EventHandler> = {
     actor,
   }) => {
     const commitUrl = head_commit?.url || `${server_url}/${repository}/tree/${ref_name}`;
-    const commitId = head_commit?.id?.slice(0, 7) || 'n/a';
     const commitMessage = head_commit?.message || 'Create/Delete/Update Branch (No head commit)';
 
     return {
@@ -113,7 +112,7 @@ const eventHandlers: Record<string, EventHandler> = {
         {
           tag: 'markdown',
           content: [
-            createContentItem('提交链接：', createLink(commitUrl, commitId)),
+            createContentItem('提交链接：', createLink(commitUrl)),
             createContentItem('代码分支：', createLink(`${server_url}/${repository}/tree/${ref_name}`, ref_name)),
             createContentItem('提交作者：', createLink(`${server_url}/${actor}`, actor)),
             createContentItem('提交信息：', commitMessage),
@@ -129,7 +128,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(issue!.html_url, `#${issue!.number}`)),
+          createContentItem('链接：', createLink(issue!.html_url)),
           createContentItem('作者：', createUserLink(issue!.user!)),
           createContentItem('指派：', issue?.assignee ? createUserLink(issue.assignee) : '无'),
           createContentItem('标签：', issue?.labels?.map(({ name }) => name).join(', ') || '无'),
@@ -146,7 +145,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(pull_request!.html_url, `#${pull_request!.number}`)),
+          createContentItem('链接：', createLink(pull_request!.html_url)),
           createContentItem('作者：', createUserLink(pull_request!.user)),
           createContentItem('指派：', pull_request?.assignee ? createUserLink(pull_request.assignee) : '无'),
           createContentItem('标签：', pull_request?.labels?.map(({ name }) => name).join(', ') || '无'),
@@ -163,7 +162,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(discussion!.html_url, `#${discussion!.number}`)),
+          createContentItem('链接：', createLink(discussion!.html_url)),
           createContentItem('作者：', createUserLink(discussion!.user as GitHubUser)),
           createContentItem('描述：', discussion?.body || '无'),
         ].join('\n'),
@@ -177,7 +176,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(comment!.html_url, '查看评论')),
+          createContentItem('链接：', createLink(comment!.html_url)),
           createContentItem('作者：', createUserLink(comment!.user!)),
           createContentItem('描述：', comment?.body || '无'),
         ].join('\n'),
@@ -191,7 +190,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(comment!.html_url, '查看评论')),
+          createContentItem('链接：', createLink(comment!.html_url)),
           createContentItem('作者：', createUserLink(comment!.user!)),
           createContentItem('描述：', comment?.body || '无'),
         ].join('\n'),
@@ -205,7 +204,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(release!.html_url, release!.tag_name)),
+          createContentItem('链接：', createLink(release!.html_url)),
           createContentItem('作者：', createUserLink(release!.author)),
           createContentItem('描述：', release?.body || '无'),
         ].join('\n'),
@@ -219,7 +218,7 @@ const eventHandlers: Record<string, EventHandler> = {
       {
         tag: 'markdown',
         content: [
-          createContentItem('链接：', createLink(comment!.html_url, '查看评论')),
+          createContentItem('链接：', createLink(comment!.html_url)),
           createContentItem('作者：', createUserLink(comment!.user!)),
           createContentItem('PR：', createLink(pull_request!.html_url, `#${pull_request!.number}`)),
           createContentItem('评论：', comment?.body || '无'),
