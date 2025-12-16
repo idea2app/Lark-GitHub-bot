@@ -48,8 +48,8 @@ const createUserLink = (user: any) =>
   user ? createLink(user.html_url, user.login) : "无";
 
 // Convert GitHub markdown to Lark card supported format
-const sanitizeMarkdown = (text: string): string => {
-  return text
+const sanitizeMarkdown = (text: string): string =>
+  text
     // Remove code blocks
     .replace(/```[\s\S]*?```/g, "[代码块]")
     // Remove inline code
@@ -70,7 +70,6 @@ const sanitizeMarkdown = (text: string): string => {
     .replace(/\n{3,}/g, "\n\n")
     // Truncate long content
     .slice(0, 800) + (text.length > 800 ? "\n..." : "");
-};
 
 const createContentItem = (label: string, value?: string) =>
   `**${label}** ${value ? sanitizeMarkdown(value) : "无"}`;
@@ -262,7 +261,7 @@ const processEvent = (event: GitHubAction) => {
   } catch (cause) {
     throw new Error(
       `Error processing ${event_name} event: ${(cause as Error).message}`,
-      { cause }
+      { cause },
     );
   }
 };
@@ -291,6 +290,6 @@ if (result) {
   console.log(JSON.stringify(card));
 } else {
   throw new Error(
-    `Unsupported ${event.event_name} event & ${event.action} action`
+    `Unsupported ${event.event_name} event & ${event.action} action`,
   );
 }
