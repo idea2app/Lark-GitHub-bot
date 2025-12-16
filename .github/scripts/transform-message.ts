@@ -270,26 +270,26 @@ const processEvent = (event: GitHubAction) => {
 const event = JSON.parse((await stdin()) || "{}") as GitHubAction;
 const result = processEvent(event);
 
-if (result) {
-  const card = {
-    schema: "2.0",
-    config: {
-      wide_screen_mode: true,
-    },
-    header: {
-      title: {
-        tag: "plain_text",
-        content: result.title,
-      },
-      template: "blue",
-    },
-    body: {
-      elements: result.elements,
-    },
-  };
-  console.log(JSON.stringify(card));
-} else {
+if (!result) {
   throw new Error(
     `Unsupported ${event.event_name} event & ${event.action} action`,
   );
 }
+
+const card = {
+  schema: "2.0",
+  config: {
+    wide_screen_mode: true,
+  },
+  header: {
+    title: {
+      tag: "plain_text",
+      content: result.title,
+    },
+    template: "blue",
+  },
+  body: {
+    elements: result.elements,
+  },
+};
+console.log(JSON.stringify(card));
