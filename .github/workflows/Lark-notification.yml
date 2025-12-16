@@ -17,7 +17,7 @@ jobs:
   send-Lark-message:
     runs-on: ubuntu-latest
     env:
-      FEISHU_BOT_WEBHOOK_URL: ${{ secrets.FEISHU_BOT_WEBHOOK_URL }}
+      LARK_CHATBOT_HOOK_URL: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
     steps:
       - uses: actions/checkout@v6
 
@@ -43,7 +43,7 @@ jobs:
         if: ${{ contains(steps.message.outputs.content, ':') }}
         uses: Open-Source-Bazaar/feishu-action@v1
         with:
-          url: ${{ env.FEISHU_BOT_WEBHOOK_URL }}
+          url: ${{ env.LARK_CHATBOT_HOOK_URL }}
           msg_type: interactive
           content: |
             ${{ steps.message.outputs.content }}
