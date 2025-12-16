@@ -16,8 +16,6 @@ on:
 jobs:
   send-Lark-message:
     runs-on: ubuntu-latest
-    env:
-      LARK_CHATBOT_HOOK_URL: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
     steps:
       - uses: actions/checkout@v6
 
@@ -29,9 +27,9 @@ jobs:
         id: message
         run: |
           YAML=$(
-            cat <<'JSON' | deno run --allow-all .github/scripts/transform-message-for-card.ts
-          ${{ toJSON(github) }}
-          JSON
+            cat <<'JSON' | deno run --allow-all .github/scripts/transform-message.ts
+            ${{ toJSON(github) }}
+            JSON
           )
           {
             echo 'content<<EOF'
@@ -41,9 +39,9 @@ jobs:
 
       - name: Send message to Lark
         if: ${{ contains(steps.message.outputs.content, ':') }}
-        uses: Open-Source-Bazaar/feishu-action@v1
+        uses: Open-Source-Bazaar/feishu-action@v3
         with:
-          url: ${{ env.LARK_CHATBOT_HOOK_URL }}
+          url: ${{ secrets.LARK_CHATBOT_HOOK_URL }}
           msg_type: interactive
           content: |
             ${{ steps.message.outputs.content }}
