@@ -77,7 +77,10 @@ type EventHandler = (
   actionText: string,
 ) => {
   title: string;
-  elements: any[];
+  elements: {
+    tag: string;
+    content: [object, object][];
+  }[];
 };
 
 // Event handlers
