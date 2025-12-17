@@ -27,7 +27,7 @@ jobs:
         id: message
         run: |
           YAML=$(
-            cat <<'JSON' | deno run --allow-all .github/scripts/transform-message.ts
+            cat <<JSON | deno run --allow-all .github/scripts/transform-message.ts
             ${{ toJSON(github) }}
             JSON
           )
