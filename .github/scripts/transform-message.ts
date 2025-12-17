@@ -37,10 +37,8 @@ const ACTION_TEXT_MAP: Record<string, string> = {
   review_requested: "请求审核",
 };
 
-const getActionText = (action?: string) => {
-  if (!action) return "编辑";
-  return ACTION_TEXT_MAP[action] || action;
-};
+const getActionText = (action?: string) => 
+  action ? (ACTION_TEXT_MAP[action] || action) : "编辑";
 
 const createLink = (href: string, text = href) => `[${text}](${href})`;
 
