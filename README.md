@@ -50,16 +50,10 @@ NPM compatible environment for example:
 
 ```shell
 npm i pnpm -g
+
 cd /path/to/your/git/repository/root
 
-folders=".github/workflows .github/scripts"
-
-for folder in $folders; do
-   mkdir -p $folder
-   cd $folder
-   pnpx get-git-folder https://github.com/idea2app/Lark-GitHub-bot main $folder
-   cd -
-done
+pnpx git-utility download https://github.com/idea2app/Lark-GitHub-bot main .github/ .github/
 ```
 
 ## Acknowledgement

@@ -37,8 +37,8 @@ const ACTION_TEXT_MAP: Record<string, string> = {
   review_requested: "请求审核",
 };
 
-const getActionText = (action?: string) => 
-  action ? (ACTION_TEXT_MAP[action] || action) : "编辑";
+const getActionText = (action?: string) =>
+  action ? ACTION_TEXT_MAP[action] || action : "编辑";
 
 const createLink = (href: string, text = href) => `[${text}](${href})`;
 
@@ -72,15 +72,17 @@ const sanitizeMarkdown = (text: string): string =>
 const createContentItem = (label: string, value?: string) =>
   `**${label}** ${value ? sanitizeMarkdown(value) : "无"}`;
 
+interface LarkMessageElement {
+  tag: string;
+  content: string | [object, object][];
+}
+
 type EventHandler = (
   event: GitHubAction,
-  actionText: string,
+  actionText: string
 ) => {
   title: string;
-  elements: {
-    tag: string;
-    content: [object, object][];
-  }[];
+  elements: LarkMessageElement[];
 };
 
 // Event handlers
@@ -93,10 +95,10 @@ const eventHandlers: Record<string, EventHandler> = {
     repository,
     actor,
   }) => {
-    const commitUrl = head_commit?.url ||
-      `${server_url}/${repository}/tree/${ref_name}`;
-    const commitMessage = head_commit?.message ||
-      "Create/Delete/Update Branch (No head commit)";
+    const commitUrl =
+      head_commit?.url || `${server_url}/${repository}/tree/${ref_name}`;
+    const commitMessage =
+      head_commit?.message || "Create/Delete/Update Branch (No head commit)";
 
     return {
       title: "GitHub 代码提交",
@@ -109,12 +111,12 @@ const eventHandlers: Record<string, EventHandler> = {
               "代码分支：",
               createLink(
                 `${server_url}/${repository}/tree/${ref_name}`,
-                ref_name,
-              ),
+                ref_name
+              )
             ),
             createContentItem(
               "提交作者：",
-              createLink(`${server_url}/${actor}`, actor),
+              createLink(`${server_url}/${actor}`, actor)
             ),
             createContentItem("提交信息：", commitMessage),
           ].join("\n"),
@@ -133,11 +135,11 @@ const eventHandlers: Record<string, EventHandler> = {
           createContentItem("作者：", createUserLink(issue!.user!)),
           createContentItem(
             "指派：",
-            issue?.assignee ? createUserLink(issue.assignee) : "无",
+            issue?.assignee ? createUserLink(issue.assignee) : "无"
           ),
           createContentItem(
             "标签：",
-            issue?.labels?.map(({ name }) => name).join(", ") || "无",
+            issue?.labels?.map(({ name }) => name).join(", ") || "无"
           ),
           createContentItem("里程碑：", issue?.milestone?.title || "无"),
           createContentItem("描述：", issue?.body || "无"),
@@ -158,11 +160,11 @@ const eventHandlers: Record<string, EventHandler> = {
             "指派：",
             pull_request?.assignee
               ? createUserLink(pull_request.assignee)
-              : "无",
+              : "无"
           ),
           createContentItem(
             "标签：",
-            pull_request?.labels?.map(({ name }) => name).join(", ") || "无",
+            pull_request?.labels?.map(({ name }) => name).join(", ") || "无"
           ),
           createContentItem("里程碑：", pull_request?.milestone?.title || "无"),
           createContentItem("描述：", pull_request?.body || "无"),
@@ -180,7 +182,7 @@ const eventHandlers: Record<string, EventHandler> = {
           createContentItem("链接：", createLink(discussion!.html_url)),
           createContentItem(
             "作者：",
-            createUserLink(discussion!.user as GitHubUser),
+            createUserLink(discussion!.user as GitHubUser)
           ),
           createContentItem("描述：", discussion?.body || "无"),
         ].join("\n"),
@@ -240,7 +242,7 @@ const eventHandlers: Record<string, EventHandler> = {
           createContentItem("作者：", createUserLink(comment!.user!)),
           createContentItem(
             "PR：",
-            createLink(pull_request!.html_url, `#${pull_request!.number}`),
+            createLink(pull_request!.html_url, `#${pull_request!.number}`)
           ),
           createContentItem("评论：", comment?.body || "无"),
         ].join("\n"),
@@ -262,7 +264,7 @@ const processEvent = (event: GitHubAction) => {
   } catch (cause) {
     throw new Error(
       `Error processing ${event_name} event: ${(cause as Error).message}`,
-      { cause },
+      { cause }
     );
   }
 };
@@ -271,11 +273,10 @@ const processEvent = (event: GitHubAction) => {
 const event = JSON.parse((await stdin()) || "{}") as GitHubAction;
 const result = processEvent(event);
 
-if (!result) {
+if (!result)
   throw new Error(
-    `Unsupported ${event.event_name} event & ${event.action} action`,
+    `Unsupported ${event.event_name} event & ${event.action} action`
   );
-}
 
 const card = {
   schema: "2.0",
