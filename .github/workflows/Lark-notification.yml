@@ -28,7 +28,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: |
-          YAML=$(echo "$GITHUB_CONTEXT" | deno run --allow-all .github/scripts/transform-message.ts)
+          YAML=$(printf '%s' "$GITHUB_CONTEXT" | deno run --allow-all .github/scripts/transform-message.ts)
           {
             echo 'content<<EOF'
             echo "$YAML"
