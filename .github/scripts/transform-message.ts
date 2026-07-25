@@ -48,10 +48,6 @@ const createUserLink = (user: any) =>
 // Convert GitHub markdown to Lark card supported format
 const sanitizeMarkdown = (text: string): string =>
   text
-    // Simplify code blocks to their content (strip ``` fencing)
-    .replace(/```[\s\S]*?```/g, (block) =>
-      block.replace(/^```\w*\n?/, "").replace(/\n?```$/, "").trim()
-    )
     // Remove inline code
     .replace(/`[^`]+`/g, (match) => match.slice(1, -1))
     // Convert images to link text
@@ -193,9 +189,9 @@ const eventHandlers: Record<string, EventHandler> = {
   }),
 
   issue_comment: ({ event: { comment, issue } }) => {
-    const isPR =
-      (issue as Record<string, unknown>)?.pull_request !== undefined;
-    const defaultTitle = isPR ? "未知 PR" : "未知 issue";
+    const isPR = !!(issue as Record<string, unknown>)?.pull_request;
+    const defaultTitle = `未知${isPR ? "PR" : "issue"}`;
+
     return {
       title: `GitHub ${isPR ? "PR" : "issue"} 评论：${issue?.title || defaultTitle}`,
       elements: [
@@ -264,7 +260,7 @@ const processEvent = (event: GitHubAction) => {
   const actionText = getActionText(action);
   const handler = eventHandlers[event_name];
 
-  if (!handler) return null; // Gracefully ignore unknown/unsupported events
+  if (!handler) throw new Error(`No handler found for event: ${event_name}`);
 
   try {
     return handler(event, actionText);
@@ -280,7 +276,10 @@ const processEvent = (event: GitHubAction) => {
 const event = JSON.parse((await stdin()) || "{}") as GitHubAction;
 const result = processEvent(event);
 
-if (!result) Deno.exit(0);
+if (!result)
+  throw new Error(
+    `Unsupported ${event.event_name} event & ${event.action} action`
+  );
 
 const card = {
   schema: "2.0",
