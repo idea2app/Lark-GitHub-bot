@@ -48,8 +48,6 @@ const createUserLink = (user: any) =>
 // Convert GitHub markdown to Lark card supported format
 const sanitizeMarkdown = (text: string): string =>
   text
-    // Remove code blocks
-    .replace(/```[\s\S]*?```/g, "[代码块]")
     // Remove inline code
     .replace(/`[^`]+`/g, (match) => match.slice(1, -1))
     // Convert images to link text
@@ -190,19 +188,24 @@ const eventHandlers: Record<string, EventHandler> = {
     ],
   }),
 
-  issue_comment: ({ event: { comment, issue } }) => ({
-    title: `GitHub issue 评论：${issue?.title || "未知 issue"}`,
-    elements: [
-      {
-        tag: "markdown",
-        content: [
-          createContentItem("链接：", createLink(comment!.html_url)),
-          createContentItem("作者：", createUserLink(comment!.user!)),
-          createContentItem("描述：", comment?.body || "无"),
-        ].join("\n"),
-      },
-    ],
-  }),
+  issue_comment: ({ event: { comment, issue } }) => {
+    const isPR = !!(issue as Record<string, unknown>)?.pull_request;
+    const defaultTitle = `未知${isPR ? "PR" : "issue"}`;
+
+    return {
+      title: `GitHub ${isPR ? "PR" : "issue"} 评论：${issue?.title || defaultTitle}`,
+      elements: [
+        {
+          tag: "markdown",
+          content: [
+            createContentItem("链接：", createLink(comment!.html_url)),
+            createContentItem("作者：", createUserLink(comment!.user!)),
+            createContentItem("描述：", comment?.body || "无"),
+          ].join("\n"),
+        },
+      ],
+    };
+  },
 
   discussion_comment: ({ event: { comment, discussion } }) => ({
     title: `GitHub 讨论评论：${discussion?.title || "无"}`,
